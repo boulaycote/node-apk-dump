@@ -42,8 +42,6 @@ module.exports = function (filename, callback) {
           } else {
             const result = parseDump(stdout)
 
-            console.log(stdout)
-            console.log(result)
             resolve(result)
             callback(null, result)
           }
