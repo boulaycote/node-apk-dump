@@ -10,7 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "aapt2-dump-badging2json": "^0.1.2",
     "decompress": "^4.2.1",
     "verror": "^1.10.0"
   }
