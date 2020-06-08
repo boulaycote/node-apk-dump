@@ -3,7 +3,7 @@
 Use AAPT2 to dump APK info and parse it into JSON.
 
 ```
-const parse = require('node-apk-dump')
+const parse = require('apk-dump')
 
 parse('path/to/apk')
   .then(manifest => {
