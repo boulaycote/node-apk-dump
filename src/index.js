@@ -1,52 +1,55 @@
-'use strict'
+"use strict";
 
-const { exec } = require('child_process')
-const os = require('os')
-const fs = require('fs')
-const VError = require('verror')
-const parseDump = require('./parse-dump')
+const { exec } = require("child_process");
+const os = require("os");
+const fs = require("fs");
+const VError = require("verror");
+const parseDump = require("./parse-dump");
 
-const toolDir = `${__dirname}/../tool`
+const toolDir = `${__dirname}/../tool`;
 
 module.exports = function (filename, callback) {
-  callback = callback || function () {}
+  callback = callback || function () {};
 
-  let platform = os.platform()
+  let platform = os.platform();
 
-  if (platform === 'darwin') platform = 'osx'
+  if (platform === "darwin") platform = "osx";
+  if (platform === "win32") platform = "windows";
 
-  const tool = `${toolDir}/${platform}/aapt2`
+  const tool = `${toolDir}/${platform}/aapt2${
+    platform === "windows" ? ".exe" : ""
+  }`;
 
   return new Promise((resolve, reject) => {
-    fs.access(tool, fs.X_OK, err => {
+    fs.access(tool, fs.X_OK, (err) => {
       if (err) {
         const verror = new VError(
           err,
-          'aapt2 not found. Did you run install.js?'
-        )
-        reject(verror)
-        callback(verror, null)
+          "aapt2 not found. Did you run install.js?"
+        );
+        reject(verror);
+        callback(verror, null);
       } else {
-        const cmd = [tool, 'dump', 'badging', filename].join(' ')
+        const cmd = [tool, "dump", "badging", filename].join(" ");
 
         exec(cmd, (err, stdout, stderr) => {
-          const error = err || stderr
+          const error = err || stderr;
 
           if (error) {
             const verror = new VError(
               error,
               `There was a problem running ${cmd}`
-            )
-            reject(verror)
-            callback(verror, null)
+            );
+            reject(verror);
+            callback(verror, null);
           } else {
-            const result = parseDump(stdout)
+            const result = parseDump(stdout);
 
-            resolve(result)
-            callback(null, result)
+            resolve(result);
+            callback(null, result);
           }
-        })
+        });
       }
-    })
-  })
-}
+    });
+  });
+};
